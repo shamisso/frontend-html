@@ -1,96 +1,108 @@
-import dir from 'path-reader';
+import fs from 'fs';
 import path from 'path';
 import webpack from 'webpack';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import CleanWebpackPlugin from 'clean-webpack-plugin';
 
 
-let dirFiles = dir.files('./public',{sync:true, shortName:true, excludeHidden:true, recursive:false});
+// Список шаблонов в директории ./src без расщирения
+let HtmlTemplates = [
+    'index'
+];
+
+
 let HtmlPlugin = [];
-for(let i=0; i<dirFiles.length; i++) {
-    let arr = dirFiles[i].split('.');
-    if(arr.length===2 && arr[1]==='pug') {
-        HtmlPlugin.push(
-            new HtmlWebpackPlugin({
-                filename: arr[0] + '.html',
-                template: './public/' + dirFiles[i]
-            }),
-        );
-    }
+for(let i=0; i<HtmlTemplates.length; i++) {
+    HtmlPlugin.push(
+        new HtmlWebpackPlugin({
+            filename: HtmlTemplates[i] + '.html',
+            template: HtmlTemplates[i] + '.pug',
+            inject: 'body'
+        })
+    );
 }
 
 
 const config = {
     name: 'config',
-
+    devtool: 'eval',
+    context: path.resolve(__dirname, "../src"),
     entry: [
-        './public/scripts/script.js'
-        // './public/test.pug'
+        'scripts/script.js'
     ],
+
     output: {
         path: path.resolve(__dirname, '../build'),
         publicPath: '/',
-        filename: '[name].js'
+        filename: '[name].bundle.js'
     },
-
-    // watch: true,
-    // watchOptions: {
-    //     aggregateTimeout: 100
-    // },
-    //
-    // devtool: false,
 
     module: {
         rules: [
             {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                use: 'babel-loader'
-            },
-            // {
-            //     test: /\.less$/,
-            //     use: 'less-loader'
-            // },
-            {
-                test: /\.html$/,
-                use: {
-                    loader: 'file-loader',
-                    options: {
-                        outputPath: path.resolve(__dirname, '../build/images')
-                    }
-                }
-            },
-            {
                 test: /\.pug$/,
-                use: {
-                    loader: 'pug-html-loader',
+                use: [{
+                    loader: 'pug-loader',
                     options: {
-
+                        pretty: true
                     }
-                }
+                }]
+            },
+            {
+                test: /\.scss$/,
+                use: ExtractTextPlugin.extract({
+                    use: [
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                sourceMap: true
+                            }
+                        },
+                        {
+                            loader: 'postcss-loader',
+                            options: {
+                                // sourceMap: true,
+                                // plugins: () =>{
+                                //     require('autoprefixer')
+                                // }
+                            }
+                        },
+                        {
+                            loader: 'sass-loader',
+                            options: {
+                                sourceMap: true,
+                            }
+                        }
+                    ],
+                    fallback: "style-loader"
+                })
+            },
+            {
+                test: /\.(png|gif|jpg)$/,
+                use: { loader: 'url-loader', options: { limit: 100000 } },
+            },
+            {
+                test: /\.(ttf|eot|svg|woff(2)?)(\?.+)?$/,
+                use: [ 'file-loader' ]
             }
-            // {
-            //     test: /\.(bmp|gif|jpg|jpeg|png|svg)$/,
-            //     use: {
-            //         loader: 'file-loader',
-            //         options: {
-            //             outputPath: path.resolve(__dirname, '../build/images')
-            //         }
-            //     }
-            // },
-            // {
-            //     test: /\.(woff|woff2|ttf|eot)$/,
-            //     use: {
-            //         loader: 'file-loader',
-            //         options: {
-            //             outputPath: path.resolve(__dirname, '../build/fonts')
-            //         }
-            //     }
-            // }
         ]
     },
 
     plugins: [
-        ...HtmlPlugin
+        new CleanWebpackPlugin(['build/*'], {root: path.resolve(__dirname, "../")}),
+        new webpack.NamedModulesPlugin(),
+        new ExtractTextPlugin({
+            filename: '[name].css',
+            allChunks: true
+        }),
+
+        ...HtmlPlugin,
+
+        // new webpack.ProvidePlugin({
+        //     $: 'jquery',
+        //     jQuery: 'jquery'
+        // })
     ]
 };
 
