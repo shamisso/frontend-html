@@ -1,0 +1,41 @@
+{
+  "name": "allpbspb-html",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "bundle": "babel-node tools/bundle.js",
+    "start": "babel-node tools/start.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^7.2.5",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-webpack-loaders": "^0.9.0",
+    "browser-sync": "^2.23.5",
+    "browser-sync-webpack-plugin": "^1.2.0",
+    "css-loader": "^0.28.9",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "file-loader": "^1.1.6",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^2.30.1",
+    "jade-loader": "^0.8.0",
+    "less-loader": "^4.0.5",
+    "path": "^0.12.7",
+    "path-reader": "^1.0.6",
+    "pug-html-loader": "^1.1.5",
+    "pug-loader": "^2.3.0",
+    "raw-loader": "^0.5.1",
+    "style-loader": "^0.19.1",
+    "webpack": "^3.10.0",
+    "webpack-dev-middleware": "^2.0.4",
+    "webpack-dev-server": "^2.11.0",
+    "webpack-hot-middleware": "^2.21.0"
+  },
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
