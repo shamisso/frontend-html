@@ -1,4 +1,3 @@
-import fs from 'fs';
 import path from 'path';
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
@@ -29,13 +28,14 @@ const config = {
     devtool: 'eval',
     context: path.resolve(__dirname, "../src"),
     entry: [
-        'scripts/script.js'
+        'scripts/script.js',
+        'styles/style.scss'
     ],
 
     output: {
         path: path.resolve(__dirname, '../build'),
         publicPath: '/',
-        filename: '[name].bundle.js'
+        filename: '[name].bundle.js',
     },
 
     module: {
@@ -59,24 +59,27 @@ const config = {
                                 sourceMap: true
                             }
                         },
-                        {
-                            loader: 'postcss-loader',
-                            options: {
-                                // sourceMap: true,
-                                // plugins: () =>{
-                                //     require('autoprefixer')
-                                // }
-                            }
-                        },
+                        // {
+                        //     loader: 'postcss-loader',
+                        //     options: {
+                        //         // sourceMap: true,
+                        //         // plugins: () =>{
+                        //         //     require('autoprefixer')
+                        //         // }
+                        //     }
+                        // },
                         {
                             loader: 'sass-loader',
                             options: {
                                 sourceMap: true,
                             }
                         }
-                    ],
-                    fallback: "style-loader"
+                    ]
                 })
+            },
+            {
+                test: /\.css$/,
+                loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
             },
             {
                 test: /\.(png|gif|jpg)$/,
@@ -97,7 +100,7 @@ const config = {
             allChunks: true
         }),
 
-        ...HtmlPlugin,
+        ...HtmlPlugin
 
         // new webpack.ProvidePlugin({
         //     $: 'jquery',
