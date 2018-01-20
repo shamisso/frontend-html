@@ -1,3 +1,17 @@
 body{
-  background: url('/images/tmp-bg.png');
+  margin: 0;
+  padding:0;
+  background: url('../images/tmp-bg.png') repeat;
+  background-size:25px 25px;
+}
+h1{
+  color: black;
+  display: block;
+  background: white;
+  width: 100%;
+  text-align: center;
+}
+img{
+  display: block;
+  margin:0 auto;
 }

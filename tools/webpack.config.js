@@ -37,7 +37,7 @@ const config = {
     output: {
         path: path.resolve(__dirname, '../build'),
         publicPath: '/',
-        filename: '[name].bundle.js',
+        filename: 'scripts/[name].bundle.js',
     },
 
     module: {
@@ -79,6 +79,7 @@ const config = {
             {
                 test: /\.scss$/,
                 use: ExtractTextPlugin.extract({
+                	  publicPath: '../',
                     use: [
                         {
                             loader: 'css-loader',
@@ -105,30 +106,38 @@ const config = {
                 })
             },
             {
-                test: /\.(png|gif|jpg)$/,
-                use: { loader: 'url-loader', options: { limit: 100000 } },
+                test: /\.(png|gif|jpg|jpeg|svg)$/,
+                use: {
+                    loader: 'file-loader',
+                    options: {
+                        name: 'images/[name].[ext]',
+                        limit: 100000
+                    }
+                },
             },
             {
-                test: /\.(ttf|eot|svg|woff(2)?)(\?.+)?$/,
-                use: [ 'file-loader' ]
+                test: /\.(ttf|eot|woff(2)?)(\?.+)?$/,
+                use: {
+                    loader: 'file-loader',
+                    options: {
+                        name: 'fonts/[name].[ext]',
+                        limit: 10000
+                    }
+                }
             }
         ]
     },
 
     plugins: [
-        new CleanWebpackPlugin(['build/*'], {root: path.resolve(__dirname, "../")}),
-        new CopyWebpackPlugin([
-            { from: 'fonts/*'},
-            { from: 'images/*'},
-        ]),
+        // new CleanWebpackPlugin(['build/*'], {root: path.resolve(__dirname, "../")}),
         new webpack.NamedModulesPlugin(),
         new ExtractTextPlugin({
-            filename: "/styles/[name].css",
+            filename: "styles/[name].css",
             allChunks: true
         }),
-
+          
         ...HtmlPlugin,
-
+    
         new webpack.ProvidePlugin({
             $: 'jquery',
             jQuery: 'jquery'
