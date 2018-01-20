@@ -16,6 +16,13 @@ function start()
     const server = express();
 
     const config = webpackConfig.find(conf => conf.name === 'config');
+
+    config.watch = true;
+    config.watchOptions = {
+        aggregateTimeout: 100
+    };
+
+
     const compiler = webpack(config);
 
     // https://github.com/webpack/webpack-dev-middleware
@@ -29,10 +36,8 @@ function start()
     server.use(webpackHotMiddleware(compiler));
 
     server.get('/', (req, res) => {
-        res.sendfile('./public/main.html');
+        res.sendfile('./index.html');
     });
-
-    server.get('port');
 
     server.listen(PORT);
 

@@ -2,6 +2,7 @@ import path from 'path';
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 import CleanWebpackPlugin from 'clean-webpack-plugin';
 
 
@@ -23,13 +24,14 @@ for(let i=0; i<HtmlTemplates.length; i++) {
 }
 
 
+
 const config = {
     name: 'config',
     devtool: 'eval',
     context: path.resolve(__dirname, "../src"),
     entry: [
-        'scripts/script.js',
-        'styles/style.scss'
+        './scripts/script.js',
+        './styles/style.scss'
     ],
 
     output: {
@@ -41,6 +43,11 @@ const config = {
     module: {
         rules: [
             {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: ['babel-loader']
+            },
+            {
                 test: /\.pug$/,
                 use: [{
                     loader: 'pug-loader',
@@ -48,6 +55,26 @@ const config = {
                         pretty: true
                     }
                 }]
+            },
+            {
+                test: /\.css$/,
+                use: ExtractTextPlugin.extract({
+                        fallback: "style-loader",
+                        use: [
+                            {
+                                loader: "css-loader"
+                            },
+                            {
+                                loader: 'postcss-loader',
+                                options: {
+                                    sourceMap: true,
+                                    plugins: (loader) => [
+                                        require('autoprefixer')()
+                                    ]
+                                }
+                            }
+                        ]
+                    })
             },
             {
                 test: /\.scss$/,
@@ -59,15 +86,15 @@ const config = {
                                 sourceMap: true
                             }
                         },
-                        // {
-                        //     loader: 'postcss-loader',
-                        //     options: {
-                        //         // sourceMap: true,
-                        //         // plugins: () =>{
-                        //         //     require('autoprefixer')
-                        //         // }
-                        //     }
-                        // },
+                        {
+                            loader: 'postcss-loader',
+                            options: {
+                                sourceMap: true,
+                                plugins: (loader) => [
+                                    require('autoprefixer')()
+                                ]
+                            }
+                        },
                         {
                             loader: 'sass-loader',
                             options: {
@@ -76,10 +103,6 @@ const config = {
                         }
                     ]
                 })
-            },
-            {
-                test: /\.css$/,
-                loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
             },
             {
                 test: /\.(png|gif|jpg)$/,
@@ -94,19 +117,28 @@ const config = {
 
     plugins: [
         new CleanWebpackPlugin(['build/*'], {root: path.resolve(__dirname, "../")}),
+        new CopyWebpackPlugin([
+            { from: 'fonts/*'},
+            { from: 'images/*'},
+        ]),
         new webpack.NamedModulesPlugin(),
         new ExtractTextPlugin({
-            filename: '[name].css',
+            filename: "/styles/[name].css",
             allChunks: true
         }),
 
-        ...HtmlPlugin
+        ...HtmlPlugin,
 
-        // new webpack.ProvidePlugin({
-        //     $: 'jquery',
-        //     jQuery: 'jquery'
-        // })
-    ]
+        new webpack.ProvidePlugin({
+            $: 'jquery',
+            jQuery: 'jquery'
+        })
+    ],
+
+    resolve: {
+        alias: {
+        }
+    }
 };
 
 export default [config];
