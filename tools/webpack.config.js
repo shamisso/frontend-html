@@ -128,7 +128,7 @@ const config = {
                         {
                             loader: 'sass-loader',
                             options: {
-                                sourceMap: true,
+                                sourceMap: true
                             }
                         }
                     ]
@@ -175,6 +175,7 @@ const config = {
 
     resolve: {
         alias: {
+
         }
     }
 };

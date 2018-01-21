@@ -27,6 +27,7 @@
     "less-loader": "^4.0.5",
     "node-filelist": "^1.0.0",
     "node-sass": "^4.7.2",
+    "normalize-scss": "^7.0.0",
     "path": "^0.12.7",
     "postcss-loader": "^2.0.10",
     "pug-html-loader": "^1.1.5",
