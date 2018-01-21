@@ -27,7 +27,7 @@ for(let i=0; i<HtmlTemplates.length; i++) {
 
 const config = {
     name: 'config',
-    devtool: 'eval',
+    devtool: 'inline-source-map',
     context: path.resolve(__dirname, "../src"),
     entry: [
         './scripts/script.js',
@@ -79,7 +79,7 @@ const config = {
             {
                 test: /\.scss$/,
                 use: ExtractTextPlugin.extract({
-                	  publicPath: '../',
+                    publicPath: '../',
                     use: [
                         {
                             loader: 'css-loader',
@@ -135,9 +135,9 @@ const config = {
             filename: "styles/[name].css",
             allChunks: true
         }),
-          
+
         ...HtmlPlugin,
-    
+
         new webpack.ProvidePlugin({
             $: 'jquery',
             jQuery: 'jquery'
