@@ -77,6 +77,35 @@ const config = {
                     })
             },
             {
+                test: /\.less$/,
+                use: ExtractTextPlugin.extract({
+                    publicPath: '../',
+                    use: [
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                sourceMap: true
+                            }
+                        },
+                        {
+                            loader: 'postcss-loader',
+                            options: {
+                                sourceMap: true,
+                                plugins: (loader) => [
+                                    require('autoprefixer')()
+                                ]
+                            }
+                        },
+                        {
+                            loader: 'less-loader',
+                            options: {
+                                sourceMap: true,
+                            }
+                        }
+                    ]
+                })
+            },
+            {
                 test: /\.scss$/,
                 use: ExtractTextPlugin.extract({
                     publicPath: '../',
@@ -129,7 +158,7 @@ const config = {
     },
 
     plugins: [
-        // new CleanWebpackPlugin(['build/*'], {root: path.resolve(__dirname, "../")}),
+        new CleanWebpackPlugin(['build/*'], {root: path.resolve(__dirname, "../")}),
         new webpack.NamedModulesPlugin(),
         new ExtractTextPlugin({
             filename: "styles/[name].css",
