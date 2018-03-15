@@ -1,6 +1,8 @@
 @import '../../node_modules/normalize-scss/sass/normalize.scss';
 @include normalize();
 
+
+@import 'grid';
 body{
   margin: 0;
   padding:0;
